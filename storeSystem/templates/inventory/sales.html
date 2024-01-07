@@ -1,0 +1,35 @@
+{% extends "../layout.html" %}
+{% load humanize %}
+{% block content %}
+<div class="content-section">
+    <legend class="border-bottom pd-2 mb-4 text-center" style="margin-top: 20px;">Sales</legend>    
+    <div class="d-flex justify-content-between mb-3">
+        <p>Total Profit : Rp{{ total_profit|intcomma }}</p>
+        <a class="btn btn-dark" href="{% url 'add_sales' %}">Add Sales</a>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 3%;">No.</th>
+                <th scope="col">Name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Revenue</th>
+                <th scope="col">Profit</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Sales in product_sales %}
+                <tr style="cursor: pointer; cursor: hand;">
+                    <td scope="row">{{ Sales.sales_id }}</td>
+                    <td scope="row">{{ Sales.product_id }}</td>
+                    <td scope="row">{{ Sales.quantity }}</td>
+                    <td scope="row">{{ Sales.value_sales|intcomma }}</td>
+                    <td scope="row">{{ Sales.profit|intcomma }}</td>
+                    <td scope="row">{{ Sales.date_of_sales }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

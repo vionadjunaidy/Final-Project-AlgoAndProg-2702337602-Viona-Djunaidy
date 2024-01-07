@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container" style="background-color: #ececec; margin: 20px auto; width: 50%; padding: 20px; border-radius: 10px;">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            {% if user.is_authenticated %}
+            <div class="text-center">
+                <h2>Welcome, {{ user.username }}!</h2>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
+                    <button class="btn btn-dark" type="submit">Log Out</button>
+                </form>
+            </div>
+            {% else %}
+            <div class="text-center">
+                <h1 style="margin-top: 20px;">Welcome!</h1>
+                <p style="font-weight: bold; font-size: 20px;">You are not logged in</p>
+                <a href="{% url 'login' %}" 
+                    style="background-color: #212529; padding: 8px 20px; border-radius: 5px; display: inline-block; text-decoration: none; color: #fff;"
+                    onmouseover="this.style.backgroundColor='#424649';"
+                    onmouseout="this.style.backgroundColor='#212529';">
+                    Log In
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

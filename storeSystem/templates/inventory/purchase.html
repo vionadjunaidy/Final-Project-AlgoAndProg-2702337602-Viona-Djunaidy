@@ -1,0 +1,32 @@
+{% extends "../layout.html" %}
+{% load humanize %}
+{% block content %}
+<div class="content-section">
+    <legend class="border-bottom pd-2 mb-4 text-center" style="margin-top: 20px;">Purchases</legend>
+    <div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-dark" href="{% url 'add_purchase' %}">Add to Inventory</a>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 3%;">No.</th>
+                <th scope="col">Name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Cost per Product</th>
+                <th scope="col">Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for Purchase in purchases %}
+                <tr style="cursor: pointer; cursor: hand;">
+                    <td scope="row">{{ Purchase.purchase_id }}</td>
+                    <td scope="row">{{ Purchase.product_id }}</td>
+                    <td scope="row">{{ Purchase.quantity }}</td>
+                    <td scope="row">{{ Purchase.cost_per_product|intcomma }}</td>
+                    <td scope="row">{{ Purchase.date_of_purchase }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

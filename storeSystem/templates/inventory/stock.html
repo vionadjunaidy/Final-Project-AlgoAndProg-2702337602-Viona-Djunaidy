@@ -1,0 +1,27 @@
+{% extends "../layout.html" %}
+{% load humanize %}
+{% block content %}
+<div class="content-section">
+    <legend class="border-bottom pd-2 mb-4 text-center" style="margin-top: 20px;">Stock</legend>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 3%;">No.</th>
+                <th scope="col">Name</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Last Stock Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+                <tr style="cursor: pointer; cursor: hand;">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ stock.product_id }}</td>
+                    <td>{{ stock.quantity }}</td>
+                    <td>{{ stock.stock_value|intcomma }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

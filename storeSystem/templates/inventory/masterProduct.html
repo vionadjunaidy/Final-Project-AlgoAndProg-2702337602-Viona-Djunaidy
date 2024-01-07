@@ -1,0 +1,32 @@
+{% extends "../layout.html" %}
+{% load humanize %}
+{% block content %}
+<div>
+    <legend class="border-bottom pd-2 mb-4 text-center" style="margin-top: 20px;">Master Products</legend>
+    <div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-dark" href="{% url 'add_masterProduct' %}">Add Product</a>
+    </div>
+    <table class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th scope="col" style="width: 3%;">No.</th>
+                <th scope="col">Name</th>
+                <th scope="col">Selling Price</th>
+                <th scope="col" style="width: 10%;"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for masterProduct in masterProducts %}
+            <tr style="cursor: pointer; cursor: hand;">
+                <td>{{ masterProduct.product_id }}</td>
+                <td>{{ masterProduct.product_name }}</td>
+                <td>{{ masterProduct.selling_price|intcomma }}</td>
+                <td>
+                    <a href="{% url 'delete_product' masterProduct.pk %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

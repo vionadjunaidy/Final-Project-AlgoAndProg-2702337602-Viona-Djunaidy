@@ -8,7 +8,9 @@ from django.contrib.auth.decorators import login_required
 #Displaying the master product list.
 @login_required
 def master(request):
+    #Retrieves all objects from the 'masterProduct' database. 
     master_products = masterProduct.objects.all()
+    #Dictionary that is going to be passed to the template. 
     context = {
         "title" : "Master Product",
         "masterProducts" : master_products
@@ -17,13 +19,16 @@ def master(request):
 
 #Adding a new product to the master product list.
 def add_masterProduct(request):
+    #Initialize error message. 
     error_message = ""
+    #Checks HTTP request method used. 
     if request.method == 'POST':
+        #Binds the form with the data inputted.
         add_form = addMasterProduct(data=request.POST)
         if add_form.is_valid():
             product_name = add_form.cleaned_data['product_name']
 
-            #Check if a product with the same product name already exsists. 
+            #Check if a product with the same product name already exists. 
             if masterProduct.objects.filter(product_name=product_name).exists():
                 error_message = "Product with the same name already exists!"
             else:
@@ -63,7 +68,9 @@ def add_masterProduct(request):
 #Displaying the list of purchase transactions.
 @login_required
 def purchase(request):
+    #Retrieves all objects from the 'Purchase' database.
     stock_products = Purchase.objects.all()
+    #Dictionary that is going to be passed to the template.
     context = {
         "title" : "Purchase",
         "purchases" : stock_products
@@ -72,7 +79,9 @@ def purchase(request):
 
 #Adding a new purchase transaction.
 def add_purchase(request):
+    #Checks HTTP request method used.
     if request.method == 'POST':
+        #Binds the form with the data inputted.
         add_purchaseForm = addPurchase(data=request.POST)
         if add_purchaseForm.is_valid():
             #Generate a new purchase_id based on the last record in the Purchase table.
@@ -97,8 +106,10 @@ def add_purchase(request):
                 old_stock = stock_item.quantity
                 #Increment stock based on the purchase quantity.
                 stock_item.quantity += quantity
+                #Case where there are no stock records previously. 
                 if stock_item.quantity is None:
                     stock_item.quantity = 0
+                #Case if there are existing stock record, it calculates the avergae stock value. 
                 else:
                     stock_item.stock_value = (old_stock * stock_item.stock_value + quantity * cost_per_product) / (old_stock + quantity)
                 stock_item.save()
@@ -116,8 +127,10 @@ def add_purchase(request):
 #View for displaying the list of sales transactions.
 @login_required
 def sales(request):
+    #Retrieves all objects from the 'Purchase' database.
     sales = Sales.objects.all()
     total_profit = sum(s.profit for s in sales)
+    #Dictionary that is going to be passed to the template.
     context = {
         "title" : "Sales",
         "product_sales" : sales,
@@ -127,9 +140,11 @@ def sales(request):
 
 #View for adding a new sales transaction.
 def add_sales(request):
+    #Initialize error message.
     error_message = ""
-
+    #Checks HTTP request method used.
     if request.method == 'POST':
+        #Binds the form with the data inputted.
         add_salesForm = addSales(data=request.POST)
         if add_salesForm.is_valid():
             #Generate a new sales_id based on the last record in the Sales table.
@@ -146,6 +161,7 @@ def add_sales(request):
             sales = Sales(sales_id=sales_id, product_id=product_id, quantity=quantity)
 
             available_stock = Stock.objects.get(product_id=product_id)
+            #Case if the quantity in the 'Stock' table is bigger or equals to the sales quantity inputted. 
             if available_stock.quantity >= quantity:
                 pricelist = masterProduct.objects.get(product_name = product_id)
                 #Calculate value_sales (revenue).
@@ -164,7 +180,7 @@ def add_sales(request):
                 except Stock.DoesNotExist:
                 #Case where the product is not in stock
                     pass
-
+            #Case if the quantity in the 'Stock' table is less than the sales quantity inputted. 
             else:
                     error_message = "Not enough stock available."
     else:
@@ -175,7 +191,9 @@ def add_sales(request):
 #View for displaying the stock information.
 @login_required
 def stock(request):
-    stocks = Stock.objects.all()    
+    #Retrieves all objects from the 'Stock' database.
+    stocks = Stock.objects.all()
+    #Dictionary that is going to be passed to the template.
     context = {
         "title": "Stock",
         "stocks": stocks,
@@ -184,6 +202,9 @@ def stock(request):
 
 #View for deleting a product from the master product list.
 class deleteMasterProduct(DeleteView):
+    #Define the model that will be deleted. 
     model = masterProduct
+    #Define the URL that will be redirected. 
     success_url = reverse_lazy('master')
+    #HTML file for delete confirmation.
     template_name = 'inventory/delete_product.html'
